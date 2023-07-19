@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>TEST</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/litera/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Central Lab</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+        aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav me-auto">
+
+          <li class="nav-item">
+            <a class="nav-link" href="/reservation">Reservation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/connect">Connect</a>
+          </li>
+          {% if session['username'] == "admin" %}
+          <li class="nav-item">
+            <a class="nav-link" href="/admin">Administration</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+        </ul>
+      </div>
+
+
+      <div class="collapse navbar-collapse order-3" id="navbarColor01">
+        <ul class="navbar-nav ms-auto">
+          {% if not session['loggedin'] %}
+          <li class="nav-item">
+            <a class="nav-link" href="#">Login</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="#">Logged as {{ session['username'] }} </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <main class="container">
+    <h3 class="text-center m-4">Connect your equipments</h3>
+    <p class="lead text-center mb-5">Create tunnel between your different reserved equipments</p>
+
+
+
+    <div class="card border-success my-4">
+      <div class="card-header">Select your reservation and the action you want</div>
+      <div class="card-body">
+
+
+        <div class="row m-2">
+          <div class="col-sm-5">
+
+            <form class="form-group d-flex" action="" method="post">
+              <div class="me-5">
+                <input type="hidden" name="form_control" value="select_reservation">
+                <select class="form-select" name="current_reservation">
+                  {% for id, name, selected in reservations %}
+                  <option value="{{ id }}" {% if selected %}selected{% endif %}>{{ name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <button type="submit" class="btn btn-success" href="#">Select</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <div class="card border-dark my-4">
+      <div class="card-header">Select 2 equipments</div>
+      <div class="card-body">
+
+        <form action="" method="post">
+          <input type="hidden" name="form_control" value="select_equipments">
+          <div class="row m-2">
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-8">
+                  <div class="form-group">
+                    <label>Equipment A</label>
+                    <select class="form-select" name="equipA">
+                      {% for id, name, selected in equipmentsA %}
+                      <option value="{{ id }}" {% if selected %}selected{% endif %}>{{ name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-8">
+                  <div class="form-group">
+                    <label>Equipment B</label>
+                    <select class="form-select" name="equipB">
+                      {% for id, name, selected in equipmentsB %}
+                      <option value="{{ id }}" {% if selected %}selected{% endif %}>{{ name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-group col-sm-2 pt-2">
+              <button type="submit" class="btn btn-dark mt-4" name="button_reservation" value="disconnect"
+                href="#">Select</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+
+    <div class="card border-primary my-4">
+      <div class="card-header">Select 2 ports</div>
+      <div class="card-body">
+
+        <form action="" method="post">
+          <input type="hidden" name="form_control" value="connection">
+          <div class="row m-2">
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Port A</label>
+                    <select class="form-select" name="portA">
+                      {% for id, port, selected in linkA %}
+                      <option value="{{ id }}" {% if selected %}selected{% endif %}>{{ port }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Port B</label>
+                    <select class="form-select" name="portB">
+                      {% for id, port, selected in linkB %}
+                      <option value="{{ id }}" {% if selected %}selected{% endif %}>{{ port }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-group col-sm-2 pt-2">
+              <button type="submit" class="btn btn-primary mt-4" href="#" name="action" value="connect">Connect</button>
+              <button type="submit" class="btn btn-danger mt-4" href="#" name="action" value="disconnect">Disconnect</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+
+
+  </main>
+
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+</html>

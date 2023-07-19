@@ -1,0 +1,5 @@
+
+********************** CENTRAL LAB RESERVATION SYSTEM *************************
+This switch is reserved by :
+If you access this switch without reservation, please contact Central Lab Admin.
+

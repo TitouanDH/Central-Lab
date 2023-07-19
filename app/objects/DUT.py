@@ -24,11 +24,52 @@ class DUT:
         self.model = result[2]
         self.console = result[3]
         self.reserv_id = result[4]
+        self.selected = False
 
         connection.close()
 
     def serialize(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    
+
+    def unlink(self):
+        try:
+            connection = connect(
+                host="localhost",
+                user="root",
+                password="Alcatel1$",
+                database="central_lab"
+            )
+        except Error as e:
+            print(e)
+            return False
+
+        cursor = connection.cursor()
+        cursor.execute("UPDATE dut SET reserv_id = NULL WHERE id = %s", (self.id,))
+        connection.commit()
+        connection.close()
+
+        return True
+
+    def link(self, reservation):
+        try:
+            connection = connect(
+                host="localhost",
+                user="root",
+                password="Alcatel1$",
+                database="central_lab"
+            )
+        except Error as e:
+            print(e)
+            return False
+
+        cursor = connection.cursor()
+        cursor.execute("UPDATE dut SET reserv_id = %s WHERE id = %s", (reservation, self.id,))
+        connection.commit()
+        connection.close()
+
+        return True
+
 
     
     @staticmethod
