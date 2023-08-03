@@ -7,8 +7,8 @@ class Reservation:
     def __init__(self, id):
         try:
             connection = connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -36,8 +36,8 @@ class Reservation:
     def delete(self):
         try:
             connection = connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -61,8 +61,8 @@ class Reservation:
     def new(duration,username, name, purpose):
         try:
             connection = connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -89,8 +89,8 @@ class Reservation:
     def getReservations(creator):
         try:
             connection = connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -113,8 +113,8 @@ class Reservation:
     def getAllReservations():
         try:
             connection = connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )

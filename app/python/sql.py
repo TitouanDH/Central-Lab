@@ -2,8 +2,8 @@ from mysql.connector import connect, Error
 
 try:
     with connect(
-        host="10.255.120.133",
-        user="admin",
+        host="localhost",
+        user="root",
         password="Alcatel1$",
         database="central_lab"
     ) as connection:
