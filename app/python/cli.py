@@ -83,16 +83,41 @@ def change_banner(ip, user):
     If you access this switch without reservation, please contact admin
 
     """.format(user)
+    try:
+        with paramiko.SSHClient() as ssh:
+            # This script doesn't work for me unless the following line is added!
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
+            ssh.connect(ip, username=username, password=password, port=22)
 
-    with paramiko.SSHClient() as ssh:
-        # This script doesn't work for me unless the following line is added!
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-        ssh.connect(ip, username=username, password=password, port=22)
+            ftp = ssh.open_sftp()
+            file=ftp.file('switch/pre_banner.txt', "w", -1)
+            file.write(text)
+            file.flush()
+            ftp.close()
+            time.sleep(1)
+            return True
+        
+    except Exception as e:
+        print(e)
+        return False
 
-        ftp = ssh.open_sftp()
-        file=ftp.file('switch/pre_banner.txt', "w", -1)
-        file.write(text)
-        file.flush()
-        ftp.close()
-        time.sleep(1)
 
+def clean_dut(ip):
+    try:
+        with paramiko.SSHClient() as ssh:
+            # This script doesn't work for me unless the following line is added!
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
+            ssh.connect(ip, username=username, password=password, port=22)
+
+            stdin, stdout,_ = ssh.exec_command("cp -r init/* working")
+            stdout.channel.recv_exit_status()
+            stdin, stdout,_ = ssh.exec_command("reload from working no rollback-timeout\r\n")
+            time.sleep(1)
+            stdin.write("Y")
+            stdin.write("\n")
+            stdin.flush()
+            return True
+
+    except Exception as e:
+        print(e)
+        return False

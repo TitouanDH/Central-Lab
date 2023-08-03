@@ -1,3 +1,4 @@
+import datetime
 import hashlib
 from flask import Flask, render_template, request, redirect, url_for, session
 from mysql.connector import connect, Error
@@ -153,10 +154,11 @@ def admin():
         for k, v in reservations.items():
             name = v.name
             user = v.creator
-            state = 'active' if True else 'dark'
+            time = v.end
+            state = 'active' if time > datetime.datetime.now() else 'dark'
             equipments = DUT.getDUTs(k)
             
-            reservations_data.append((k, state, user, name, [(k, v.model, v.ip, v.console) for (k, v) in equipments.items()]))
+            reservations_data.append((k, state, user, name, time, [(k, v.model, v.ip, v.console) for (k, v) in equipments.items()]))
 
         return render_template("admin.html", reservations=reservations_data)
     
