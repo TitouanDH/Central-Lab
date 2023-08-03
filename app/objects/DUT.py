@@ -8,8 +8,8 @@ class DUT:
     def __init__(self, id):
         try:
             connection = connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -36,8 +36,8 @@ class DUT:
     def unlink(self):
         try:
             connection = connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -46,7 +46,7 @@ class DUT:
             return False
 
         cursor = connection.cursor()
-        cursor.execute("UPDATE dut SET reserv_id = NULL WHERE id = %s", (self.id,))
+        cursor.execute("UPDATE dut SET service = NULL WHERE id = %s", (self.id,))
         connection.commit()
         connection.close()
 
@@ -58,8 +58,8 @@ class DUT:
     def link(self, reservation):
         try:
             connection = connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -93,8 +93,8 @@ class DUT:
     def getDUTs(reserv_id):
         try:
             connection = connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -117,8 +117,8 @@ class DUT:
     def getAvailable():
         try:
             connection = connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )

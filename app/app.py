@@ -240,8 +240,8 @@ def login():
         # Check if account exists using MySQL
         try:
             connection = mysql.connector.connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -276,8 +276,8 @@ def register():
         # Check if account exists using MySQL
         try:
             connection = mysql.connector.connect(
-                host="10.255.120.133",
-                user="admin",
+                host="localhost",
+                user="root",
                 password="Alcatel1$",
                 database="central_lab"
             )
