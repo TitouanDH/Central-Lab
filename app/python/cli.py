@@ -13,7 +13,7 @@ def create_tunnel(ip1, port1, ip2, port2, bvlan, service_nbr):
         with paramiko.SSHClient() as ssh:
             # This script doesn't work for me unless the following line is added!
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-            ssh.connect(ip1, username=username, password=password, port=22)
+            ssh.connect(ip1, username=username, password=password, port=22, timeout=1)
 
             ssh.exec_command("service spb {0} isid {0} bvlan {1}".format(service_nbr, bvlan))
             ssh.exec_command("service {0} pseudo-wire enable".format(service_nbr))
@@ -27,7 +27,7 @@ def create_tunnel(ip1, port1, ip2, port2, bvlan, service_nbr):
         with paramiko.SSHClient() as ssh:
             # This script doesn't work for me unless the following line is added!
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-            ssh.connect(ip2, username=username, password=password, port=22)
+            ssh.connect(ip2, username=username, password=password, port=22, timeout=1)
 
             ssh.exec_command("service spb {0} isid {0} bvlan {1}".format(service_nbr, bvlan))
             ssh.exec_command("service {0} pseudo-wire enable".format(service_nbr))
@@ -50,7 +50,7 @@ def delete_tunnel(ip1, port1, ip2, port2, service_nbr):
         with paramiko.SSHClient() as ssh:
             # This script doesn't work for me unless the following line is added!
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-            ssh.connect(ip1, username=username, password=password, port=22)
+            ssh.connect(ip1, username=username, password=password, port=22, timeout=1)
 
             ssh.exec_command("no service {0} sap port {1}:all".format(service_nbr, port1))
             ssh.exec_command("service spb {0} admin-state disable".format(service_nbr))
@@ -62,7 +62,7 @@ def delete_tunnel(ip1, port1, ip2, port2, service_nbr):
         with paramiko.SSHClient() as ssh:
             # This script doesn't work for me unless the following line is added!
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-            ssh.connect(ip2, username=username, password=password, port=22)
+            ssh.connect(ip2, username=username, password=password, port=22, timeout=1)
 
             ssh.exec_command("no service {0} sap port {1}:all".format(service_nbr, port2))
             ssh.exec_command("service spb {0} admin-state disable".format(service_nbr))
@@ -87,7 +87,7 @@ def change_banner(ip, user):
         with paramiko.SSHClient() as ssh:
             # This script doesn't work for me unless the following line is added!
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-            ssh.connect(ip, username=username, password=password, port=22)
+            ssh.connect(ip, username=username, password=password, port=22, timeout=1)
 
             ftp = ssh.open_sftp()
             file=ftp.file('switch/pre_banner.txt', "w", -1)
@@ -107,7 +107,7 @@ def clean_dut(ip):
         with paramiko.SSHClient() as ssh:
             # This script doesn't work for me unless the following line is added!
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-            ssh.connect(ip, username=username, password=password, port=22)
+            ssh.connect(ip, username=username, password=password, port=22, timeout=1)
 
             stdin, stdout,_ = ssh.exec_command("cp -r init/* working")
             stdout.channel.recv_exit_status()

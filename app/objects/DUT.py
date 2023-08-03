@@ -1,5 +1,6 @@
 import json
 from mysql.connector import connect, Error
+from python.cli import change_banner, clean_dut
 
 
 
@@ -49,6 +50,9 @@ class DUT:
         connection.commit()
         connection.close()
 
+        change_banner(self.ip, 'nobody')
+        clean_dut(self.ip)
+
         return True
 
     def link(self, reservation):
@@ -66,7 +70,15 @@ class DUT:
         cursor = connection.cursor()
         cursor.execute("UPDATE dut SET reserv_id = %s WHERE id = %s", (reservation, self.id,))
         connection.commit()
+
+        self.reserv_id = reservation
+        
+        cursor.execute('SELECT creator FROM reservations WHERE id = %s', (self.reserv_id, ))
+        result = cursor.fetchone()
+
+        change_banner(self.ip, result[0])
         connection.close()
+
 
         return True
 

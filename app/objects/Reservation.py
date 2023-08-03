@@ -2,6 +2,8 @@ import json
 from mysql.connector import connect, Error
 import datetime
 
+from .DUT import DUT
+
 
 class Reservation:
     def __init__(self, id):
@@ -46,8 +48,11 @@ class Reservation:
             return False
 
         cursor = connection.cursor()
-        cursor.execute("UPDATE dut SET reserv_id = NULL WHERE reserv_id = %s", (self.id,))
-        connection.commit()
+        cursor.execute("SELECT id from dut WHERE reserv_id = %s", (self.id,))
+        result = cursor.fetchall()
+
+        for id in result:
+            DUT(id[0]).unlink()
         # delete reservatiom
         cursor = connection.cursor()
         cursor.execute("DELETE FROM reservations WHERE id = %s", (self.id,))
