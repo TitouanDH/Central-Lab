@@ -54,7 +54,6 @@ class DUT:
             Link(id[0]).deleteService()
 
 
-
         cursor.execute("UPDATE dut SET reserv_id = NULL WHERE id = %s", (self.id,))
         connection.commit()
         connection.close()
