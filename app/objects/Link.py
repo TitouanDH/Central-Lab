@@ -5,8 +5,8 @@ class Link:
     def __init__(self, id):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -33,8 +33,8 @@ class Link:
     def updateService(self, service):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -53,8 +53,8 @@ class Link:
     def deleteService(self):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -80,8 +80,8 @@ class Link:
     def getLinks(dut):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )

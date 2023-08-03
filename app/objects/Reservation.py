@@ -1,13 +1,14 @@
 import json
 from mysql.connector import connect, Error
+import datetime
 
 
 class Reservation:
     def __init__(self, id):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -19,7 +20,7 @@ class Reservation:
         result = cursor.fetchone()
         print()
 
-        self.duration = result[1]
+        self.end = result[1]
         self.creator = result[2]
         self.name = result[3]
         self.purpose = result[4]
@@ -35,8 +36,8 @@ class Reservation:
     def delete(self):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -60,17 +61,19 @@ class Reservation:
     def new(duration,username, name, purpose):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
         except Error as e:
             print(e)
             return False
+        
+        end = datetime.datetime.now() + datetime.timedelta(hours=int(duration))
 
         cursor = connection.cursor()
-        cursor.execute('INSERT INTO reservations (duration, creator, name, purpose) VALUES (%s, %s, %s, %s)', (duration,username, name, purpose,))
+        cursor.execute('INSERT INTO reservations (end, creator, name, purpose) VALUES (%s, %s, %s, %s)', (end,username, name, purpose,))
         connection.commit()
         connection.close()
 
@@ -86,8 +89,8 @@ class Reservation:
     def getReservations(creator):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -110,8 +113,8 @@ class Reservation:
     def getAllReservations():
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )

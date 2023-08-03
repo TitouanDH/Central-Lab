@@ -69,10 +69,10 @@
       </thead>
       <tbody>
 
-        {% for res_id, state, user, name, equipments in reservations %}
+        {% for res_id, state, user, name, time, equipments in reservations %}
 
         <tr class="table-{{ state }}">
-          <th scope="row">{% if state == "active" %}Active{% else %}Expired{% endif %}</th>
+          <th scope="row">{{ time }}</th>
           <td>{{ user }}</td>
           <td>{{ name }}</td>
           <td>
