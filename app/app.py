@@ -17,7 +17,7 @@ SERVICE = 4000
 
 app = Flask(__name__)
 
-app.secret_key = 'Letacla01*'
+app.secret_key = 'ddd5fba5533c4c649dfab92ff7540079'
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -234,8 +234,8 @@ def login():
         # Check if account exists using MySQL
         try:
             connection = mysql.connector.connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -270,8 +270,8 @@ def register():
         # Check if account exists using MySQL
         try:
             connection = mysql.connector.connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )

@@ -8,8 +8,8 @@ class DUT:
     def __init__(self, id):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -36,8 +36,8 @@ class DUT:
     def unlink(self):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -58,8 +58,8 @@ class DUT:
     def link(self, reservation):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -93,8 +93,8 @@ class DUT:
     def getDUTs(reserv_id):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -117,8 +117,8 @@ class DUT:
     def getAvailable():
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
