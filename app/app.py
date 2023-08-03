@@ -1,6 +1,7 @@
 import datetime
 import hashlib
-from flask import Flask, render_template, request, redirect, url_for, session
+import os
+from flask import Flask, render_template, request, redirect, send_from_directory, url_for, session
 import mysql.connector
 import datetime
 
@@ -18,6 +19,11 @@ SERVICE = 4000
 app = Flask(__name__)
 
 app.secret_key = 'Letacla01*'
+
+@app.route('/favicon')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
 
 
 @app.route("/", methods=['GET', 'POST'])
