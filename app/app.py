@@ -1,7 +1,8 @@
 import datetime
 import hashlib
 from flask import Flask, render_template, request, redirect, url_for, session
-from mysql.connector import connect, Error
+import mysql.connector
+import datetime
 
 
 from objects.Link import Link
@@ -14,21 +15,9 @@ from python.cli import create_tunnel, delete_tunnel
 BVLAN = 4000
 SERVICE = 4000
 
-
-
 app = Flask(__name__)
 
-try:
-    connection = connect(
-        host="localhost",
-        user="root",
-        password="Alcatel1$",
-        database="central_lab"
-    )
-except Error as e:
-    print(e)
-
-app.secret_key = 'Letacla01*'
+app.secret_key = 'ddd5fba5533c4c649dfab92ff7540079'
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -243,6 +232,16 @@ def login():
         hash = hashlib.sha1(hash.encode())
         password = hash.hexdigest()
         # Check if account exists using MySQL
+        try:
+            connection = mysql.connector.connect(
+                host="10.255.120.133",
+                user="admin",
+                password="Alcatel1$",
+                database="central_lab"
+            )
+        except mysql.connector.Error as e:
+            print(e)
+
         cursor = connection.cursor()
         cursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password,))
         # Fetch one record and return the result
@@ -252,8 +251,10 @@ def login():
             session['loggedin'] = True
             session['username'] = account[0]
             # Redirect to home page
+            connection.close()
             return redirect(url_for('index'))
         
+    connection.close()    
     return render_template('login.html', alert=True)
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -267,11 +268,22 @@ def register():
         password = request.form['password']
 
         # Check if account exists using MySQL
+        try:
+            connection = mysql.connector.connect(
+                host="10.255.120.133",
+                user="admin",
+                password="Alcatel1$",
+                database="central_lab"
+            )
+        except mysql.connector.Error as e:
+            print(e)
+
         cursor = connection.cursor()
         cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
         account = cursor.fetchone()
         # If account exists show error and validation checks
         if account:
+            connection.close()
             return render_template('register.html', alert2=True)
         else:
             # Hash the password
@@ -281,6 +293,7 @@ def register():
             # Account doesn't exist, and the form data is valid, so insert the new account into the accounts table
             cursor.execute('INSERT INTO users VALUES (%s, %s)', (username, password,))
             connection.commit()
+            connection.close()
             return render_template('register.html', success=True)
     else:
         return render_template('register.html', alert=True)
