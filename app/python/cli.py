@@ -43,7 +43,7 @@ def create_tunnel(ip1, port1, ip2, port2, bvlan, service_nbr):
         return False
     
 
-def delete_tunnel(ip1, port1, ip2, port2, service_nbr):
+def delete_tunnel(ip1, port1, service_nbr):
     #bvlan logic
     try:
         # On 1st switch
@@ -56,18 +56,6 @@ def delete_tunnel(ip1, port1, ip2, port2, service_nbr):
             ssh.exec_command("service spb {0} admin-state disable".format(service_nbr))
             _, stdout, _  = ssh.exec_command("no service spb {0}".format(service_nbr))
             stdout.channel.recv_exit_status() 
-
-
-        # On 2nd switch
-        with paramiko.SSHClient() as ssh:
-            # This script doesn't work for me unless the following line is added!
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-            ssh.connect(ip2, username=username, password=password, port=22, timeout=1)
-
-            ssh.exec_command("no service {0} sap port {1}:all".format(service_nbr, port2))
-            ssh.exec_command("service spb {0} admin-state disable".format(service_nbr))
-            _, stdout, _ = ssh.exec_command("no service spb {0}".format(service_nbr))
-            stdout.channel.recv_exit_status()  
 
         return True
     

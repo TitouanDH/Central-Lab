@@ -1,5 +1,6 @@
 import json
 from mysql.connector import connect, Error
+from .Link import Link
 from python.cli import change_banner, clean_dut
 
 
@@ -46,7 +47,15 @@ class DUT:
             return False
 
         cursor = connection.cursor()
-        cursor.execute("UPDATE dut SET service = NULL WHERE id = %s", (self.id,))
+        cursor.execute("SELECT id FROM links WHERE dut = %s", (self.id,))
+        result = cursor.fetchall()
+
+        for id in result:
+            Link(id[0]).deleteService()
+
+
+
+        cursor.execute("UPDATE dut SET reserv_id = NULL WHERE id = %s", (self.id,))
         connection.commit()
         connection.close()
 
