@@ -46,7 +46,7 @@ class DUT:
             return False
 
         cursor = connection.cursor()
-        cursor.execute("UPDATE dut SET service = NULL WHERE id = %s", (self.id,))
+        cursor.execute("UPDATE dut SET reserv_id = NULL WHERE id = %s", (self.id,))
         connection.commit()
         connection.close()
 
