@@ -78,8 +78,8 @@
 
               <fieldset class="form-group mt-4 row">
                 <label for="customRange1" class="form-label">Duration</label>
-                <input type="range" class="form-range p-2" value="0" min="0" max="200" name="duration">
-                <label for="happy" class="col-6">0</label>
+                <input type="range" class="form-range p-2" value="0" min="0" max="200" name="duration" oninput="this.nextElementSibling.value = this.value">
+                <output for="happy" class="col-6">0</output>
                 <label for="" class="col-6 text-end">200 hours</label>
               </fieldset>
 
