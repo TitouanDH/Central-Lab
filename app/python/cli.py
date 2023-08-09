@@ -82,7 +82,6 @@ def change_banner(ip, user):
             file.write(text)
             file.flush()
             ftp.close()
-            time.sleep(1)
             return True
         
     except Exception as e:
@@ -99,11 +98,8 @@ def clean_dut(ip):
 
             stdin, stdout,_ = ssh.exec_command("cp -r init/* working")
             stdout.channel.recv_exit_status()
-            stdin, stdout,_ = ssh.exec_command("reload from working no rollback-timeout\r\n")
-            time.sleep(1)
-            stdin.write("Y")
-            stdin.write("\n")
-            stdin.flush()
+            stdin, stdout,_ = ssh.exec_command("reload from working\r\n")
+            stdout.channel.recv_exit_status()
             return True
 
     except Exception as e:
