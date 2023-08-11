@@ -1,7 +1,7 @@
 import json
 from mysql.connector import connect, Error
 from .Link import Link
-from python.cli import change_banner, clean_dut
+from tasks import change_banner, clean_dut
 
 
 
@@ -9,8 +9,8 @@ class DUT:
     def __init__(self, id):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -37,8 +37,8 @@ class DUT:
     def unlink(self):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -58,16 +58,16 @@ class DUT:
         connection.commit()
         connection.close()
 
-        change_banner(self.ip, 'nobody')
-        clean_dut(self.ip)
+        change_banner.delay(self.ip, 'nobody')
+        clean_dut.delay(self.ip)
 
         return True
 
     def link(self, reservation):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -84,7 +84,7 @@ class DUT:
         cursor.execute('SELECT creator FROM reservations WHERE id = %s', (self.reserv_id, ))
         result = cursor.fetchone()
 
-        change_banner(self.ip, result[0])
+        change_banner.delay(self.ip, result[0])
         connection.close()
 
 
@@ -101,8 +101,8 @@ class DUT:
     def getDUTs(reserv_id):
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -125,8 +125,8 @@ class DUT:
     def getAvailable():
         try:
             connection = connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )

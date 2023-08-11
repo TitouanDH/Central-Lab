@@ -9,7 +9,7 @@ import datetime
 from objects.Link import Link
 from objects.DUT import DUT
 from objects.Reservation import Reservation
-from python.cli import create_tunnel, delete_tunnel
+from tasks import create_tunnel, delete_tunnel
 
 
 
@@ -118,13 +118,13 @@ def connect():
                     else:
                         SERVICE += 1
 
-                    if create_tunnel(portA.core_ip, portA.core_port, portB.core_ip, portB.core_port, BVLAN, SERVICE): # if tunnel is created
+                    if create_tunnel.delay(portA.core_ip, portA.core_port, portB.core_ip, portB.core_port, BVLAN, SERVICE): # if tunnel is created
                         portA.updateService(SERVICE)
                         portB.updateService(SERVICE)
                 else:
-                    if delete_tunnel(portA.core_ip, portA.core_port, SERVICE): # if tunnel is created
+                    if delete_tunnel.delay(portA.core_ip, portA.core_port, SERVICE): # if tunnel is created
                         portA.deleteService()
-                    if delete_tunnel(portB.core_ip, portB.core_port, SERVICE): # if tunnel is created
+                    if delete_tunnel.delay(portB.core_ip, portB.core_port, SERVICE): # if tunnel is created
                         portB.deleteService()
 
                 return redirect(url_for("connect"))
@@ -241,8 +241,8 @@ def login():
         # Check if account exists using MySQL
         try:
             connection = mysql.connector.connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
@@ -277,8 +277,8 @@ def register():
         # Check if account exists using MySQL
         try:
             connection = mysql.connector.connect(
-                host="localhost",
-                user="root",
+                host="10.255.120.133",
+                user="admin",
                 password="Alcatel1$",
                 database="central_lab"
             )
