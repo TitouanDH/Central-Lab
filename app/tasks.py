@@ -1,6 +1,6 @@
 from celery import Celery, shared_task
 import paramiko
-
+import time
 
 app = Celery('tasks', broker='pyamqp://guest@localhost//')
 username= 'admin'
@@ -117,5 +117,3 @@ def clean_dut(ip):
 @shared_task(ignore_result=True)
 def test():
     print("clean_dut")
-
-clean_dut.delay("10.255.138.96")
