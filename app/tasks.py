@@ -113,7 +113,3 @@ def clean_dut(ip):
     except Exception as e:
         print(e)
         return False
-    
-@shared_task(ignore_result=True)
-def test():
-    print("clean_dut")
