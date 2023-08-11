@@ -122,8 +122,9 @@ def connect():
                         portA.updateService(SERVICE)
                         portB.updateService(SERVICE)
                 else:
-                    if delete_tunnel(portA.core_ip, portA.core_port, portB.core_ip, portB.core_port, SERVICE): # if tunnel is created
+                    if delete_tunnel(portA.core_ip, portA.core_port, SERVICE): # if tunnel is created
                         portA.deleteService()
+                    if delete_tunnel(portB.core_ip, portB.core_port, SERVICE): # if tunnel is created
                         portB.deleteService()
 
                 return redirect(url_for("connect"))
