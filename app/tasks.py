@@ -43,7 +43,7 @@ def get_header(ip):
                         "Authorization": "Bearer " + token}
         return True, query_header
     else:  # NOT OK
-        print('An error has occurred.')
+        print('An error has occurred. ' + r.status_code)
         return False, None
 
 def cli(ip,header, cmd):
@@ -59,10 +59,10 @@ def cli(ip,header, cmd):
             return output
 
     elif r.status_code == 400 or r.status_code == 401:
-        raise Exception('Code 400')
+        raise Exception('Code ' + r.status_code)
 
     else:  # NOT OK
-        raise Exception('Unknown error code')
+        raise Exception('Unknown error code ' + r.status_code)
 
 @shared_task(ignore_result=True)
 def change_banner(ip, user):
@@ -90,26 +90,31 @@ def change_banner(ip, user):
         print(e)
         return False
 
-@shared_task(ignore_result=False)
+
 def delete_tunnel(ip, port, service_nbr):
+    service_nbr = str(service_nbr)
+    port = str(port)
+    
     header = get_header(ip)
     if header[0] : 
         header = header[1]
     else:
         return False
-    #bvlan logic
     print("delete_tunnel")
     try :
         cli(ip,header, "no service {0} sap port {1}:all".format(service_nbr, port))
         cli(ip,header, "service spb {0} admin-state disable".format(service_nbr))
         cli(ip,header, "no service spb {0}".format(service_nbr))
+
+        return True
     except Exception as e:
         print(e)
         return False
 
-@shared_task(ignore_result=False)
-def create_tunnel(ip1, port1, ip2, port2, bvlan, service_nbr):
-    #bvlan logic
+
+def create_tunnel(ip1, port1, bvlan, service_nbr):
+    bvlan = str(bvlan)
+    service_nbr = str(service_nbr)
     print("create_tunnel")
     header = get_header(ip1)
     if header[0] : 
@@ -117,36 +122,18 @@ def create_tunnel(ip1, port1, ip2, port2, bvlan, service_nbr):
     else:
         print('cannot auth to ' + ip1)
         return False
-    #bvlan logic
-    print("delete_tunnel")
     try :
         cli(ip1,header, "service spb {0} isid {0} bvlan {1}".format(service_nbr, bvlan))
         cli(ip1,header, "service {0} pseudo-wire enable".format(service_nbr))
         cli(ip1,header, "service l2profile 'spbbackbone' 802.1x tunnel 802.1ab peer".format(service_nbr))
         cli(ip1,header, "service access port {0} vlan-xlation enable l2profile 'spbbackbone'".format(port1))
         cli(ip1,header, "service {0} sap port {1}:all".format(service_nbr, port1))
-    except Exception as e:
-        print(e)
-        return False
-    
 
-    header = get_header(ip2)
-    if header[0] : 
-        header = header[1]
-    else:
-        print('cannot auth to ' + ip2)
-        return False
-    #bvlan logic
-    print("delete_tunnel")
-    try :
-        cli(ip2,header, "service spb {0} isid {0} bvlan {1}".format(service_nbr, bvlan))
-        cli(ip2,header, "service {0} pseudo-wire enable".format(service_nbr))
-        cli(ip2,header, "service l2profile 'spbbackbone' 802.1x tunnel 802.1ab peer".format(service_nbr))
-        cli(ip2,header, "service access port {0} vlan-xlation enable l2profile 'spbbackbone'".format(port2))
-        cli(ip2,header, "service {0} sap port {1}:all".format(service_nbr, port2))
+        return True
     except Exception as e:
         print(e)
         return False
+
 
 @shared_task(ignore_result=True)
 def clean_dut(ip):

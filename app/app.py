@@ -9,9 +9,6 @@ import datetime
 from objects.Link import Link
 from objects.DUT import DUT
 from objects.Reservation import Reservation
-from tasks import create_tunnel, delete_tunnel
-
-
 
 BVLAN = 4000
 SERVICE = 4000
@@ -117,15 +114,11 @@ def connect():
                         SERVICE = 4000
                     else:
                         SERVICE += 1
-
-                    if create_tunnel.delay(portA.core_ip, portA.core_port, portB.core_ip, portB.core_port, BVLAN, SERVICE): # if tunnel is created
-                        portA.updateService(SERVICE)
-                        portB.updateService(SERVICE)
+                    portA.updateService(SERVICE,BVLAN)
+                    portB.updateService(SERVICE,BVLAN)
                 else:
-                    if delete_tunnel.delay(portA.core_ip, portA.core_port, SERVICE): # if tunnel is created
-                        portA.deleteService()
-                    if delete_tunnel.delay(portB.core_ip, portB.core_port, SERVICE): # if tunnel is created
-                        portB.deleteService()
+                    portA.deleteService()
+                    portB.deleteService()
 
                 return redirect(url_for("connect"))
 

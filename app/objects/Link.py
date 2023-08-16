@@ -1,5 +1,6 @@
 import json
 from mysql.connector import connect, Error
+from tasks import create_tunnel, delete_tunnel
 
 class Link:
     def __init__(self, id):
@@ -12,7 +13,6 @@ class Link:
             )
         except Error as e:
             print(e)
-
 
         self.id = id
         cursor = connection.cursor()
@@ -30,7 +30,7 @@ class Link:
     def serialize(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
     
-    def updateService(self, service):
+    def updateService(self, service, bvlan):
         try:
             connection = connect(
                 host="10.255.120.133",
@@ -42,12 +42,16 @@ class Link:
             print(e)
             return False
 
-        cursor = connection.cursor()
-        cursor.execute("UPDATE links SET service = %s WHERE id = %s", (service, self.id,))
-        connection.commit()
-        connection.close()
+        if create_tunnel(self.core_ip, self.core_port, bvlan, service):
+            self.service = service
+            cursor = connection.cursor()
+            cursor.execute("UPDATE links SET service = %s WHERE id = %s", (self.service, self.id,))
+            connection.commit()
+            connection.close()
 
-        return True
+            return True
+        else:
+            return False
     
 
     def deleteService(self):
@@ -62,12 +66,19 @@ class Link:
             print(e)
             return False
 
-        cursor = connection.cursor()
-        cursor.execute("UPDATE links SET service = NULL WHERE id = %s", (self.id,))
-        connection.commit()
-        connection.close()
-
-        return True
+        if self.service is not None:
+            if delete_tunnel(self.core_ip, self.core_port, self.service):
+                self.service = None
+                cursor = connection.cursor()
+                cursor.execute("UPDATE links SET service = NULL WHERE id = %s", (self.id,))
+                connection.commit()
+                connection.close()
+                return True
+            else:
+                return False
+            
+        else:
+            return True
 
 
     
