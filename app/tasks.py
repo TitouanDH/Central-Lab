@@ -1,5 +1,6 @@
 from celery import Celery, shared_task
 import paramiko
+import time
 import requests
 from urllib3.exceptions import InsecurePlatformWarning
 from urllib3.exceptions import InsecureRequestWarning
@@ -7,9 +8,9 @@ from urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecurePlatformWarning)
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-
 app = Celery('tasks', broker='pyamqp://guest@localhost//')
-
+username= 'admin'
+password='switch'
 
 def get_header(ip):
     """
@@ -52,7 +53,7 @@ def cli(ip,header, cmd):
     if r.status_code == 200:  # OK
         output = r.json()['result']['output']
         error = r.json()['result']['error']
-        
+
         if len(error)>0:
             raise Exception('Error field')
         else:
@@ -63,6 +64,7 @@ def cli(ip,header, cmd):
 
     else:  # NOT OK
         raise Exception('Unknown error code ' + r.status_code)
+
 
 @shared_task(ignore_result=True)
 def change_banner(ip, user):
@@ -77,7 +79,7 @@ def change_banner(ip, user):
         with paramiko.SSHClient() as ssh:
             # This script doesn't work for me unless the following line is added!
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
-            ssh.connect(ip, username='admin', password='switch', port=22, timeout=1)
+            ssh.connect(ip, username=username, password=password, port=22, timeout=1)
 
             ftp = ssh.open_sftp()
             file=ftp.file('switch/pre_banner.txt', "w", -1)
